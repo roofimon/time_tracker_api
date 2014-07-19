@@ -1,7 +1,7 @@
 package time_tracker
 
 type Inserter interface {
-	Insert(docs ...interface{}) error
+	Insert(data interface{})
 }
 
 type TimeTracker struct {
