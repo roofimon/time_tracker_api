@@ -1,21 +1,51 @@
 package time_tracker
+
 import (
-  "testing"
-  "labix.org/v2/mgo"
-  "labix.org/v2/mgo/bson"
+	//"labix.org/v2/mgo"
+	//"labix.org/v2/mgo/bson"
+	"testing"
 )
 
-func TestItShouldCreateNewRecordWhenCheckInFirstTime(t *testing.T) {
-  test_session, _ := mgo.Dial("172.16.129.130")
-  defer test_session.Close()
-  db := test_session.DB("test_time_tracker")
-  timeTracker := TimeTracker{db}
-  timeTracker.CheckIn("roofimon")
-  dtac_collection := db.C("dtac") 
-  defer dtac_collection.DropCollection()
-  roofimon_checkin, _ := dtac_collection.Find(bson.M{"username": "roofimon"}).Count()
-  if roofimon_checkin != 1 {
-    t.Errorf("Expect one record but get %v", roofimon_checkin)
-  }
+type MockRepository struct {
+	List  []interface{}
+	Count int
 }
 
+func (m *MockRepository) Insert(docs ...interface{}) error {
+	for i, v := range docs {
+		m.List[m.Count+i] = v
+		m.Count++
+	}
+	return nil
+}
+
+func TestItShouldCreateNewRecordWhenCheckInFirstTime(t *testing.T) {
+	mockRepository := MockRepository{
+		make([]interface{}, 1),
+		0,
+	}
+
+	timeTracker := TimeTracker{&mockRepository}
+	timeTracker.CheckIn("roofimon")
+
+	roofimon_checkin := len(mockRepository.List)
+	if roofimon_checkin != 1 {
+		t.Errorf("Expect one record but get %v", roofimon_checkin)
+	}
+}
+
+/*func xTestIntegrateMongoDBItShouldCreateNewRecordWhenCheckInFirstTime(t *testing.T) {
+	test_session, _ := mgo.Dial("192.168.1.37")
+	defer test_session.Close()
+	db := test_session.DB("test_time_tracker")
+	collection := db.C("dtac")
+	defer collection.DropCollection()
+
+	timeTracker := TimeTracker{collection}
+	timeTracker.CheckIn("roofimon")
+
+	roofimon_checkin, _ := collection.Find(bson.M{"username": "roofimon"}).Count()
+	if roofimon_checkin != 1 {
+		t.Errorf("Expect one record but get %v", roofimon_checkin)
+	}
+}*/
