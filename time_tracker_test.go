@@ -1,8 +1,8 @@
 package time_tracker
 
 import (
-	//"labix.org/v2/mgo"
-	//"labix.org/v2/mgo/bson"
+	/*"labix.org/v2/mgo"
+	"labix.org/v2/mgo/bson"*/
 	"testing"
 )
 
@@ -11,12 +11,9 @@ type MockRepository struct {
 	Count int
 }
 
-func (m *MockRepository) Insert(docs ...interface{}) error {
-	for i, v := range docs {
-		m.List[m.Count+i] = v
-		m.Count++
-	}
-	return nil
+func (m *MockRepository) Insert(data interface{}) {
+	m.List[0] = data
+	m.Count = 1
 }
 
 func TestItShouldCreateNewRecordWhenCheckInFirstTime(t *testing.T) {
@@ -41,7 +38,7 @@ func TestItShouldCreateNewRecordWhenCheckInFirstTime(t *testing.T) {
 	collection := db.C("dtac")
 	defer collection.DropCollection()
 
-	timeTracker := TimeTracker{collection}
+	timeTracker := TimeTracker{&MongoRepository{collection}}
 	timeTracker.CheckIn("roofimon")
 
 	roofimon_checkin, _ := collection.Find(bson.M{"username": "roofimon"}).Count()
