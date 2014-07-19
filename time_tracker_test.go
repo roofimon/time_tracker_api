@@ -25,7 +25,7 @@ func TestItShouldCreateNewRecordWhenCheckInFirstTime(t *testing.T) {
 	timeTracker := TimeTracker{&mockRepository}
 	timeTracker.CheckIn("roofimon")
 
-	roofimon_checkin := len(mockRepository.List)
+	roofimon_checkin := mockRepository.Count
 	if roofimon_checkin != 1 {
 		t.Errorf("Expect one record but get %v", roofimon_checkin)
 	}
