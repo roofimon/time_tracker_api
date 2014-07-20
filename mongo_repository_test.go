@@ -7,7 +7,7 @@ import (
 )
 
 func TestInsertDataIntoMongo(t *testing.T) {
-	session, _ := mgo.Dial("192.168.2.40, 192.168.1.37")
+	session, _ := mgo.Dial("localhost")
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	collection := session.DB("test_time_tracker").C("dtac")
