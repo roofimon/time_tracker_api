@@ -2,6 +2,8 @@ package time_tracker
 
 import (
 	"labix.org/v2/mgo"
+	"labix.org/v2/mgo/bson"
+	"time"
 )
 
 type MongoRepository struct {
@@ -9,5 +11,5 @@ type MongoRepository struct {
 }
 
 func (repository *MongoRepository) Insert(data interface{}) {
-	repository.collection.Insert(data)
+	repository.collection.Insert(bson.M{"name": data, "checkIn": time.Now()})
 }
