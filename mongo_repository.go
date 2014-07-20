@@ -15,5 +15,5 @@ func (repository *MongoRepository) Insert(data interface{}) {
 }
 
 func (repository *MongoRepository) Update(data interface{}) {
-    repository.collection.Update(bson.M{"name": data}, bson.M{"$set":bson.M{"checkout": time.Now().Unix()}})
+	repository.collection.Update(bson.M{"name": data}, bson.M{"$set": bson.M{"checkout": time.Now().Unix()}})
 }
