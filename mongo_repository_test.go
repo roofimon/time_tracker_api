@@ -7,15 +7,29 @@ import (
     "time"
 )
 
-func TestInsertDataIntoMongo(t *testing.T) {
+const IPORSUT = "iporsut"
+var session mgo.Session
+var mongoRepository MongoRepository
+var collection *mgo.Collection
+
+func setUp() {
 	session, _ := mgo.Dial("localhost")
-	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	collection := session.DB("test_time_tracker").C("dtac")
-	mongoRepository := MongoRepository{collection}
-	mongoRepository.Insert("iporsut")
-	defer collection.DropCollection()
-	iporsutCheckin, _ := collection.Find(bson.M{"name": "iporsut"}).Count()
+	collection = session.DB("test_time_tracker").C("dtac")
+	mongoRepository = MongoRepository{collection}
+}
+
+
+func tearDown() {
+	session.Close()
+	collection.DropCollection()
+}
+
+func TestInsertDataIntoMongo(t *testing.T) {
+    setUp()
+    defer tearDown()
+	mongoRepository.Insert(IPORSUT)
+	iporsutCheckin, _ := collection.Find(bson.M{"name": IPORSUT}).Count()
 	if iporsutCheckin != 1 {
 		t.Errorf("Expect 1 but got %v", iporsutCheckin)
 	}
@@ -26,16 +40,12 @@ type Person struct {
 }
 
 func TestUpdateDateIntoMongo(t *testing.T) {
-	session, _ := mgo.Dial("localhost")
-	defer session.Close()
-	session.SetMode(mgo.Monotonic, true)
-	collection := session.DB("test_time_tracker").C("dtac")
-	mongoRepository := MongoRepository{collection}
-	mongoRepository.Insert("iporsut")
-    mongoRepository.Update("iporsut")
-    defer collection.DropCollection()
+    setUp()
+    defer tearDown()
+	mongoRepository.Insert(IPORSUT)
+    mongoRepository.Update(IPORSUT)
     var iporsut Person
-    err := collection.Find(bson.M{"name": "iporsut"}).One(&iporsut)
+    err := collection.Find(bson.M{"name": IPORSUT}).One(&iporsut)
     if err != nil {
         t.Error("Can't find any record match to keyword")
     }
