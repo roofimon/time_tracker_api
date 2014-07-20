@@ -9,11 +9,13 @@ import (
 )
 
 const IPORSUT = "iporsut"
-var session mgo.Session
-var mongoRepository MongoRepository
-var collection *mgo.Collection
-var iporsut = Person{Name: IPORSUT, Site: "dtac", Checkin: time.Now().Unix(), Checkout: 0 }
 
+var (
+	session         mgo.Session
+	mongoRepository MongoRepository
+	collection      *mgo.Collection
+     iporsut = Person{Name: IPORSUT, Site: "dtac", Checkin: time.Now().Unix(), Checkout: 0 }
+)
 func TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
     //Arrange
     setUp()
