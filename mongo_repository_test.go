@@ -29,7 +29,7 @@ func TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
 	}
 }
 
-func TestUpdateAnExistungData(t *testing.T) {
+func TestUpdateAnExistingData(t *testing.T) {
 	//Arrange
 	setUp()
 	defer tearDown()
