@@ -4,27 +4,30 @@ import (
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"testing"
-    "time"
+	"time"
 )
 
 const IPORSUT = "iporsut"
-var session mgo.Session
-var mongoRepository MongoRepository
-var collection *mgo.Collection
+
+var (
+	session         mgo.Session
+	mongoRepository MongoRepository
+	collection      *mgo.Collection
+)
 
 type Person struct {
-    Name string
-    Site string
-    Checkin int64
-    Checkout int64 "checkout"
+	Name     string
+	Site     string
+	Checkin  int64
+	Checkout int64 "checkout"
 }
 
-func setUp() { session, _ := mgo.Dial("localhost")
+func setUp() {
+	session, _ := mgo.Dial("localhost")
 	session.SetMode(mgo.Monotonic, true)
 	collection = session.DB("test_time_tracker").C("dtac")
 	mongoRepository = MongoRepository{collection}
 }
-
 
 func tearDown() {
 	session.Close()
@@ -32,9 +35,9 @@ func tearDown() {
 }
 
 func TestInsertDataIntoMongo(t *testing.T) {
-    var iporsut = Person{Name: IPORSUT, Site: "dtac", Checkin: time.Now().Unix(), Checkout: 0 }
-    setUp()
-    defer tearDown()
+	var iporsut = Person{Name: IPORSUT, Site: "dtac", Checkin: time.Now().Unix(), Checkout: 0}
+	setUp()
+	defer tearDown()
 	mongoRepository.Insert(iporsut)
 	iporsutCheckin, _ := collection.Find(bson.M{"name": IPORSUT}).Count()
 	if iporsutCheckin != 1 {
@@ -42,19 +45,18 @@ func TestInsertDataIntoMongo(t *testing.T) {
 	}
 }
 
-
 func TestUpdateDateIntoMongo(t *testing.T) {
-    var iporsut = Person{Name: IPORSUT, Site: "dtac", Checkin: time.Now().Unix(), Checkout: 0 }
-    setUp()
-    defer tearDown()
+	var iporsut = Person{Name: IPORSUT, Site: "dtac", Checkin: time.Now().Unix(), Checkout: 0}
+	setUp()
+	defer tearDown()
 	mongoRepository.Insert(iporsut)
-    mongoRepository.Update(IPORSUT)
-    //var iporsut Person
-    err := collection.Find(bson.M{"name": IPORSUT}).One(&iporsut)
-    if err != nil {
-        t.Error("Can't find any record match to keyword")
-    }
-    if iporsut.Checkout == 0 {
-        t.Errorf("Expect not to equal 0 but got %v", iporsut)
-    }
+	mongoRepository.Update(IPORSUT)
+	//var iporsut Person
+	err := collection.Find(bson.M{"name": IPORSUT}).One(&iporsut)
+	if err != nil {
+		t.Error("Can't find any record match to keyword")
+	}
+	if iporsut.Checkout == 0 {
+		t.Errorf("Expect not to equal 0 but got %v", iporsut)
+	}
 }
