@@ -26,11 +26,11 @@ type S struct {
 }
 
 func (S) Before(t *testing.T) {
-  setUp()
+	setUp()
 }
 
 func (S) After(t *testing.T) {
-  tearDown()
+	tearDown()
 }
 
 func (S) TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
