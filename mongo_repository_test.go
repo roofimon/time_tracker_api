@@ -2,6 +2,7 @@ package time_tracker
 
 import (
 	"fmt"
+	. "github.com/iporsut/test_set"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"testing"
@@ -17,10 +18,22 @@ var (
 	iporsut         = Person{Name: IPORSUT, Site: "dtac", Checkin: time.Now().Unix(), Checkout: 0}
 )
 
-func TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
-	//Arrange
-	setUp()
-	defer tearDown()
+func TestExampleSuite(t *testing.T) {
+	RunSuite(S{}, t)
+}
+
+type S struct {
+}
+
+func (S) Before(t *testing.T) {
+  setUp()
+}
+
+func (S) After(t *testing.T) {
+  tearDown()
+}
+
+func (S) TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
 	//Act
 	mongoRepository.Insert(iporsut)
 	//Assert
@@ -29,10 +42,7 @@ func TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
 	}
 }
 
-func TestUpdateAnExistingData(t *testing.T) {
-	//Arrange
-	setUp()
-	defer tearDown()
+func (S) TestUpdateAnExistingData(t *testing.T) {
 	mongoRepository.Insert(iporsut)
 	//Act
 	mongoRepository.Update(IPORSUT)
