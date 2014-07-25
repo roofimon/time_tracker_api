@@ -15,7 +15,8 @@ var (
 	session         mgo.Session
 	mongoRepository MongoRepository
 	collection      *mgo.Collection
-	iporsut         = Person{Name: IPORSUT, Site: "dtac", Checkin: time.Now().Unix(), Checkout: 0}
+	today           = time.Now()
+	iporsut         = Person{Name: IPORSUT, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
 )
 
 func TestExampleSuite(t *testing.T) {
@@ -44,20 +45,21 @@ func (S) TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
 
 func (S) TestUpdateAnExistingData(t *testing.T) {
 	mongoRepository.Insert(iporsut)
+	time.Sleep(time.Second)
 	//Act
-	mongoRepository.Update(IPORSUT)
+	mongoRepository.Update(iporsut)
 	//Assert
-	if CheckoutIsNotEqualToCurrentTime() {
-		t.Errorf("Expect to equal current date time (int64 format) but got %v", iporsut.Checkout)
+	if CheckoutIsEqualToCurrentTime() {
+		t.Errorf("Expect not to equal check in time %v  but got %v", iporsut.Checkin, iporsut.Checkout)
 	}
 }
 
-func CheckoutIsNotEqualToCurrentTime() bool {
-	err := collection.Find(bson.M{"name": IPORSUT}).One(&iporsut)
+func CheckoutIsEqualToCurrentTime() bool {
+	err := collection.Find(bson.M{"name": IPORSUT, "workdate": time.Now().Format("2006-01-02")}).One(&iporsut)
 	if err != nil {
 		fmt.Print("Can't find any record match to keyword")
 	}
-	if iporsut.Checkout == 0 {
+	if iporsut.Checkout == iporsut.Checkin {
 		return true
 	} else {
 		return false

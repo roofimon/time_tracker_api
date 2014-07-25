@@ -10,10 +10,12 @@ type MongoRepository struct {
 	collection *mgo.Collection
 }
 
-func (repository *MongoRepository) Insert(data interface{}) {
-	repository.collection.Insert(data)
+func (repository *MongoRepository) Insert(person Person) {
+	repository.collection.Insert(person)
 }
 
-func (repository *MongoRepository) Update(data interface{}) {
-	repository.collection.Update(bson.M{"name": data}, bson.M{"$set": bson.M{"checkout": time.Now().Unix()}})
+func (repository *MongoRepository) Update(person Person) {
+	var keys = bson.M{"name": person.Name, "workdate": time.Now().Format("2006-01-02")}
+	var value = bson.M{"$set": bson.M{"checkout": time.Now()}}
+	repository.collection.Update(keys, value)
 }
