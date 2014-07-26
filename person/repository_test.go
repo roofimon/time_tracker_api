@@ -32,8 +32,7 @@ func tearDownDB(t *testing.T) {
 
 func TestMongoRepositoryInsertPerson(t *testing.T) {
 	setUpDB(t)
-	defer session.Close()
-	defer collection.DropCollection()
+	defer tearDownDB(t)
 
 	var repository Repository = NewMongoRepository(collection)
 
@@ -55,8 +54,7 @@ func TestMongoRepositoryInsertPerson(t *testing.T) {
 
 func TestMongoRepositoryUpdatePerson(t *testing.T) {
 	setUpDB(t)
-	defer session.Close()
-	defer collection.DropCollection()
+	defer tearDownDB(t)
 
 	var p Person
 
