@@ -1,6 +1,7 @@
 package time_tracker
 
 import (
+	//"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -24,6 +25,7 @@ func TestItShouldCreateNewRecordWhenCheckInFirstTime(t *testing.T) {
 	timeTracker.CheckIn("roofimon")
 
 	roofimon_checkin := mockRepository.Count
+	//assert.Equal(1, roofimon_checkin, "they should be equal")
 	if roofimon_checkin != 1 {
 		t.Errorf("Expect one record but get %v", roofimon_checkin)
 	}
