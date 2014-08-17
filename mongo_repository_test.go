@@ -42,7 +42,7 @@ func (S) After(t *testing.T) {
 func (S) TestGetDailyReport(t *testing.T) {
 	mongoRepository.Insert(iporsut)
 	mongoRepository.Insert(roong)
-	mongoRepository.Insert(roong)
+	mongoRepository.Insert(roof)
 	from := time.Now().Format("2006-01-02")
 	to := time.Now().Format("2006-01-02")
 	dailyReport := mongoRepository.List(from, to)

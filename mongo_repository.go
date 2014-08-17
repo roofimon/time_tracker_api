@@ -15,9 +15,9 @@ func (repository *MongoRepository) Insert(person Person) {
 }
 
 func (repository *MongoRepository) List(from string, to string) []Person {
-	iporsut = Person{Name: IPORSUT, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
-	roong = Person{Name: ROONG, Site: "dtac", WorkDate: yesterday.Format("2006-01-02"), Checkin: today, Checkout: today}
-	return []Person{iporsut, roong}
+	var result []Person
+	_ = repository.collection.Find(bson.M{"workdate": from}).All(&result)
+	return result
 }
 
 func (repository *MongoRepository) Update(person Person) {
