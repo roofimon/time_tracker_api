@@ -11,13 +11,18 @@ import (
 )
 
 const IPORSUT = "iporsut"
+const ROONG = "roong"
+const ROOF = "roof"
 
 var (
 	session         mgo.Session
 	mongoRepository MongoRepository
 	collection      *mgo.Collection
 	today           = time.Now()
+	yesterday       = today.Add(-24 * time.Hour)
 	iporsut         = Person{Name: IPORSUT, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
+	roong           = Person{Name: ROONG, Site: "dtac", WorkDate: yesterday.Format("2006-01-02"), Checkin: today, Checkout: today}
+	roof            = Person{Name: ROOF, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
 )
 
 func TestExampleSuite(t *testing.T) {
@@ -33,6 +38,18 @@ func (S) Before(t *testing.T) {
 
 func (S) After(t *testing.T) {
 	tearDown()
+}
+
+func (S) TestGetDailyReport(t *testing.T) {
+	mongoRepository.Insert(iporsut)
+	mongoRepository.Insert(roong)
+	mongoRepository.Insert(roof)
+	from := time.Now().Format("2006-01-02")
+	to := time.Now().Format("2006-01-02")
+	dailyReport := mongoRepository.List(from, to)
+	if recordCount := len(dailyReport); recordCount != 2 {
+		t.Errorf("Expect records to equal 2 but got %v", recordCount)
+	}
 }
 
 func (S) TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {

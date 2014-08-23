@@ -2,7 +2,8 @@ package time_tracker
 
 import (
 	"time"
-    "gopkg.in/mgo.v2/bson"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 type Person struct {
