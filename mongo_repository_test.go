@@ -2,11 +2,12 @@ package time_tracker
 
 import (
 	"fmt"
-	. "github.com/iporsut/test_set"
-	"labix.org/v2/mgo"
-	"labix.org/v2/mgo/bson"
 	"testing"
 	"time"
+
+	. "github.com/iporsut/test_set"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 const IPORSUT = "iporsut"
@@ -45,7 +46,7 @@ func (S) TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
 
 func (S) TestUpdateAnExistingData(t *testing.T) {
 	mongoRepository.Insert(iporsut)
-	time.Sleep(time.Second)
+	time.Sleep(2 * time.Second)
 	//Act
 	mongoRepository.Update(iporsut)
 	//Assert
@@ -78,7 +79,7 @@ func NotOnlyOneRecordInCollection() bool {
 func setUp() {
 	session, _ := mgo.Dial("localhost")
 	session.SetMode(mgo.Monotonic, true)
-	collection = session.DB("test_time_tracker").C("dtac")
+	collection = session.DB("test_site").C("dtac")
 	mongoRepository = MongoRepository{collection}
 }
 

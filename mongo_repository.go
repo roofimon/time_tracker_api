@@ -1,9 +1,10 @@
 package time_tracker
 
 import (
-	"labix.org/v2/mgo"
-	"labix.org/v2/mgo/bson"
 	"time"
+
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type MongoRepository struct {
