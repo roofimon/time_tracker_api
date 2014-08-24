@@ -21,9 +21,9 @@ var (
 	collection      *mgo.Collection
 	today           = time.Now()
 	yesterday       = today.Add(-24 * time.Hour)
-	iporsut         = model.Person{Name: IPORSUT, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
-	roong           = model.Person{Name: ROONG, Site: "dtac", WorkDate: yesterday.Format("2006-01-02"), Checkin: today, Checkout: today}
-	roof            = model.Person{Name: ROOF, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
+	iporsut         = model.Person{Name: IPORSUT, Site: "dtac", WorkDate: today.Format(MongoDateFormat), Checkin: today, Checkout: today}
+	roong           = model.Person{Name: ROONG, Site: "dtac", WorkDate: yesterday.Format(MongoDateFormat), Checkin: today, Checkout: today}
+	roof            = model.Person{Name: ROOF, Site: "dtac", WorkDate: today.Format(MongoDateFormat), Checkin: today, Checkout: today}
 )
 
 func TestExampleSuite(t *testing.T) {
@@ -45,8 +45,8 @@ func (S) TestGetDailyReport(t *testing.T) {
 	mongoRepository.Insert(iporsut)
 	mongoRepository.Insert(roong)
 	mongoRepository.Insert(roof)
-	from := time.Now().Format("2006-01-02")
-	to := time.Now().Format("2006-01-02")
+	from := time.Now().Format(MongoDateFormat)
+	to := time.Now().Format(MongoDateFormat)
 	dailyReport := mongoRepository.List(from, to)
 	if recordCount := len(dailyReport); recordCount != 2 {
 		t.Errorf("Expect records to equal 2 but got %v", recordCount)
@@ -74,7 +74,7 @@ func (S) TestUpdateAnExistingData(t *testing.T) {
 }
 
 func CheckoutIsEqualToCurrentTime() bool {
-	err := collection.Find(bson.M{"name": IPORSUT, "workdate": time.Now().Format("2006-01-02")}).One(&iporsut)
+	err := collection.Find(bson.M{"name": IPORSUT, "workdate": time.Now().Format(MongoDateFormat)}).One(&iporsut)
 	if err != nil {
 		fmt.Print("Can't find any record match to keyword")
 	}
