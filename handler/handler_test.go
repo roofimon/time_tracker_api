@@ -88,7 +88,7 @@ func testStatusCode(t *testing.T, recorder *httptest.ResponseRecorder, code int)
 	}
 }
 
-func TestURLHandler(t *testing.T) {
+func TestCheckinURLHandler(t *testing.T) {
 	var (
 		m          = &mockTracker{t: t}
 		tracker    = TimeTrackerHandler{m}
