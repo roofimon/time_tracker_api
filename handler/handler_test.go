@@ -1,6 +1,7 @@
-package handler_test
+package handler
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -8,6 +9,8 @@ import (
 
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/ant0ine/go-json-rest/rest/test"
+
+	"net/http/httptest"
 )
 
 func TestHandler(t *testing.T) {
@@ -42,4 +45,26 @@ func TestHandler(t *testing.T) {
 		"POST", "http://www.sprint3r.com/api/coach/checkout", &map[string]string{"name": "iporsut", "league": "dtac"}))
 	recorded.CodeIs(202)
 	recorded.ContentTypeIsJson()
+}
+
+func TestCheckinHandler(t *testing.T) {
+	var (
+		body       = bytes.NewBufferString(`{"name": "iporsut", "league": "dtac"}`)
+		request, _ = http.NewRequest("POST", "/api/coach/checkin", body)
+		recorder   = httptest.NewRecorder()
+	)
+
+	CheckinHandler(recorder, request)
+
+	if recorder.Code != http.StatusCreated {
+		t.Errorf("expect %d but was %d", http.StatusCreated, recorder.Code)
+	}
+
+	var (
+		expectedJSON = `{"id":"53f87e7ad18a68e0a884d31e"}`
+		actualJSON   = recorder.Body.String()
+	)
+	if recorder.Body.String() != expectedJSON {
+		t.Errorf("expected %s but was %s", expectedJSON, actualJSON)
+	}
 }
