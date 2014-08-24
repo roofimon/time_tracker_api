@@ -61,7 +61,7 @@ func TestCheckinHandler(t *testing.T) {
 		Tracker: m,
 	}
 
-	trackerHandler.Checkin(recorder, request)
+	trackerHandler.checkin(recorder, request)
 
 	var (
 		expectedJSON = `{"id":"53f87e7ad18a68e0a884d31e"}`

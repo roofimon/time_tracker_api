@@ -23,7 +23,7 @@ type TimeTrackerHandler struct {
 	Tracker
 }
 
-func (t *TimeTrackerHandler) Checkin(w http.ResponseWriter, r *http.Request) {
+func (t *TimeTrackerHandler) checkin(w http.ResponseWriter, r *http.Request) {
 	var user User
 	json.NewDecoder(r.Body).Decode(&user)
 
@@ -46,5 +46,5 @@ func (t *TimeTrackerHandler) checkout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t *TimeTrackerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	t.Checkin(w, r)
+	t.checkin(w, r)
 }
