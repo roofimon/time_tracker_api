@@ -68,3 +68,17 @@ func TestCheckinHandler(t *testing.T) {
 		t.Errorf("expected %s but was %s", expectedJSON, actualJSON)
 	}
 }
+
+func TestCheckoutHandler(t *testing.T) {
+	var (
+		body       = bytes.NewBufferString(`{"name": "iporsut", "league": "dtac"}`)
+		request, _ = http.NewRequest("POST", "/api/coach/checkout", body)
+		recorder   = httptest.NewRecorder()
+	)
+
+	CheckoutHandler(recorder, request)
+
+	if recorder.Code != http.StatusAccepted {
+		t.Errorf("expect %d but was %d", http.StatusCreated, recorder.Code)
+	}
+}
