@@ -1,4 +1,4 @@
-package time_tracker
+package model
 
 import (
 	"time"

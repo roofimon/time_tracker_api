@@ -1,7 +1,6 @@
 package time_tracker
 
 import (
-	//"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -17,8 +16,8 @@ func (m *MockRepository) Insert(data interface{}) {
 
 func TestItShouldCreateNewRecordWhenCheckInFirstTime(t *testing.T) {
 	mockRepository := MockRepository{
-		make([]interface{}, 1),
-		0,
+		List:  make([]interface{}, 1),
+		Count: 0,
 	}
 
 	timeTracker := TimeTracker{&mockRepository}

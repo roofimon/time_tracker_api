@@ -1,9 +1,10 @@
-package time_tracker
+package repository
 
 import (
 	"fmt"
 	"testing"
 	"time"
+	"time_tracker_api/model"
 
 	. "github.com/iporsut/test_set"
 	"gopkg.in/mgo.v2"
@@ -20,9 +21,9 @@ var (
 	collection      *mgo.Collection
 	today           = time.Now()
 	yesterday       = today.Add(-24 * time.Hour)
-	iporsut         = Person{Name: IPORSUT, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
-	roong           = Person{Name: ROONG, Site: "dtac", WorkDate: yesterday.Format("2006-01-02"), Checkin: today, Checkout: today}
-	roof            = Person{Name: ROOF, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
+	iporsut         = model.Person{Name: IPORSUT, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
+	roong           = model.Person{Name: ROONG, Site: "dtac", WorkDate: yesterday.Format("2006-01-02"), Checkin: today, Checkout: today}
+	roof            = model.Person{Name: ROOF, Site: "dtac", WorkDate: today.Format("2006-01-02"), Checkin: today, Checkout: today}
 )
 
 func TestExampleSuite(t *testing.T) {
@@ -63,7 +64,7 @@ func (S) TestInsertOneTimeTrackingRecordIntoMongo(t *testing.T) {
 
 func (S) TestUpdateAnExistingData(t *testing.T) {
 	mongoRepository.Insert(iporsut)
-	time.Sleep(2 * time.Second)
+	time.Sleep(1 * time.Second)
 	//Act
 	mongoRepository.Update(iporsut)
 	//Assert
