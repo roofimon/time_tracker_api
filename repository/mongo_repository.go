@@ -2,7 +2,7 @@ package repository
 
 import (
 	"time"
-	"time_tracker_api/model"
+	"github.com/roofimon/time_tracker_api/model"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 	"time"
-	"time_tracker_api/model"
+	"github.com/roofimon/time_tracker_api/model"
 
 	. "github.com/iporsut/test_set"
 	"gopkg.in/mgo.v2"
