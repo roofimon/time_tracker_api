@@ -87,3 +87,17 @@ func testStatusCode(t *testing.T, recorder *httptest.ResponseRecorder, code int)
 		t.Errorf("expect %d but was %d", code, recorder.Code)
 	}
 }
+
+func TestURLHandler(t *testing.T) {
+	var (
+		m          = &mockTracker{t: t}
+		tracker    = TimeTrackerHandler{m}
+		body       = bytes.NewBufferString(`{"name": "iporsut", "league": "dtac"}`)
+		request, _ = http.NewRequest("POST", "/api/coach/checkin", body)
+		recorder   = httptest.NewRecorder()
+	)
+
+	tracker.ServeHTTP(recorder, request)
+
+	m.expectCallOnce()
+}
