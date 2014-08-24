@@ -2,11 +2,13 @@ package repository
 
 import (
 	"time"
-	"time_tracker_api/model"
+	"github.com/roofimon/time_tracker_api/model"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
+
+const MongoDateFormat = "2006-01-02"
 
 type MongoRepository struct {
 	collection *mgo.Collection
@@ -23,7 +25,7 @@ func (repository *MongoRepository) List(from string, to string) []model.Person {
 }
 
 func (repository *MongoRepository) Update(person model.Person) {
-	var keys = bson.M{"name": person.Name, "workdate": time.Now().Format("2006-01-02")}
+	var keys = bson.M{"name": person.Name, "workdate": time.Now().Format(MongoDateFormat)}
 	var value = bson.M{"$set": bson.M{"checkout": time.Now()}}
 	repository.collection.Update(keys, value)
 
