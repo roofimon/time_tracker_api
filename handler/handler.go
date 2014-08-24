@@ -13,10 +13,12 @@ func CheckinHandler(w http.ResponseWriter, r *http.Request) {
 	c := Checkin{ID: "53f87e7ad18a68e0a884d31e"}
 	b, _ := json.Marshal(c)
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	w.Write(b)
 }
 
 func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 }

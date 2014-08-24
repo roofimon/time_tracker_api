@@ -67,6 +67,8 @@ func TestCheckinHandler(t *testing.T) {
 	if recorder.Body.String() != expectedJSON {
 		t.Errorf("expected %s but was %s", expectedJSON, actualJSON)
 	}
+
+	testContentTypeJSON(t, recorder)
 }
 
 func TestCheckoutHandler(t *testing.T) {
@@ -80,5 +82,13 @@ func TestCheckoutHandler(t *testing.T) {
 
 	if recorder.Code != http.StatusAccepted {
 		t.Errorf("expect %d but was %d", http.StatusCreated, recorder.Code)
+	}
+
+	testContentTypeJSON(t, recorder)
+}
+
+func testContentTypeJSON(t *testing.T, recorder *httptest.ResponseRecorder) {
+	if recorder.Header().Get("Content-Type") != "application/json" {
+		t.Errorf("expected application/json but was %s", recorder.Header().Get("Content-Type"))
 	}
 }
