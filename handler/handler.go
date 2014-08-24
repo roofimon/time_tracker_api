@@ -9,8 +9,24 @@ type Checkin struct {
 	ID string `json:"id"`
 }
 
-func CheckinHandler(w http.ResponseWriter, r *http.Request) {
-	c := Checkin{ID: "53f87e7ad18a68e0a884d31e"}
+type User struct {
+	Name   string `json:"name"`
+	League string `json:"league"`
+}
+
+type Tracker interface {
+	CheckIn(user User) Checkin
+}
+
+type TimeTrackerHandler struct {
+	Tracker
+}
+
+func (t *TimeTrackerHandler) Checkin(w http.ResponseWriter, r *http.Request) {
+	var user User
+	json.NewDecoder(r.Body).Decode(&user)
+
+	c := t.CheckIn(user)
 	b, _ := json.Marshal(c)
 
 	w.Header().Set("Content-Type", "application/json")

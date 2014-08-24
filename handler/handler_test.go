@@ -7,6 +7,33 @@ import (
 	"testing"
 )
 
+type mockTracker struct {
+	t    *testing.T
+	call int
+}
+
+func (m *mockTracker) CheckIn(user User) Checkin {
+	if user.Name != "iporsut" {
+		m.t.Errorf("expect name is iporsut")
+	}
+
+	if user.League != "dtac" {
+		m.t.Errorf("expect league is league")
+	}
+
+	m.call++
+
+	return Checkin{
+		ID: "53f87e7ad18a68e0a884d31e",
+	}
+}
+
+func (m *mockTracker) expectCallOnce() {
+	if m.call != 1 {
+		m.t.Errorf("expect Tracker must be call once time")
+	}
+}
+
 func TestCheckinHandler(t *testing.T) {
 	var (
 		body       = bytes.NewBufferString(`{"name": "iporsut", "league": "dtac"}`)
@@ -14,7 +41,13 @@ func TestCheckinHandler(t *testing.T) {
 		recorder   = httptest.NewRecorder()
 	)
 
-	CheckinHandler(recorder, request)
+	var m = &mockTracker{t: t}
+
+	var trackerHandler = &TimeTrackerHandler{
+		Tracker: m,
+	}
+
+	trackerHandler.Checkin(recorder, request)
 
 	var (
 		expectedJSON = `{"id":"53f87e7ad18a68e0a884d31e"}`
@@ -26,6 +59,8 @@ func TestCheckinHandler(t *testing.T) {
 
 	testStatusCode(t, recorder, http.StatusCreated)
 	testContentTypeJSON(t, recorder)
+
+	m.expectCallOnce()
 }
 
 func TestCheckoutHandler(t *testing.T) {
