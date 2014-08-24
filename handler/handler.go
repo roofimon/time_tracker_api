@@ -16,6 +16,7 @@ type User struct {
 
 type Tracker interface {
 	CheckIn(user User) Checkin
+	CheckOut(user User) error
 }
 
 type TimeTrackerHandler struct {
@@ -34,7 +35,12 @@ func (t *TimeTrackerHandler) Checkin(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
+func (t *TimeTrackerHandler) checkout(w http.ResponseWriter, r *http.Request) {
+	var user User
+	json.NewDecoder(r.Body).Decode(&user)
+
+	t.CheckOut(user)
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 }

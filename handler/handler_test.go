@@ -28,6 +28,20 @@ func (m *mockTracker) CheckIn(user User) Checkin {
 	}
 }
 
+func (m *mockTracker) CheckOut(user User) error {
+	if user.Name != "iporsut" {
+		m.t.Errorf("expect name is iporsut")
+	}
+
+	if user.League != "dtac" {
+		m.t.Errorf("expect league is league")
+	}
+
+	m.call++
+
+	return nil
+}
+
 func (m *mockTracker) expectCallOnce() {
 	if m.call != 1 {
 		m.t.Errorf("expect Tracker must be call once time")
@@ -65,15 +79,19 @@ func TestCheckinHandler(t *testing.T) {
 
 func TestCheckoutHandler(t *testing.T) {
 	var (
-		body       = bytes.NewBufferString(`{"name": "iporsut", "league": "dtac"}`)
-		request, _ = http.NewRequest("POST", "/api/coach/checkout", body)
-		recorder   = httptest.NewRecorder()
+		body           = bytes.NewBufferString(`{"name": "iporsut", "league": "dtac"}`)
+		request, _     = http.NewRequest("POST", "/api/coach/checkout", body)
+		recorder       = httptest.NewRecorder()
+		m              = &mockTracker{t: t}
+		trackerHandler = &TimeTrackerHandler{Tracker: m}
 	)
 
-	CheckoutHandler(recorder, request)
+	trackerHandler.checkout(recorder, request)
 
 	testStatusCode(t, recorder, http.StatusAccepted)
 	testContentTypeJSON(t, recorder)
+
+	m.expectCallOnce()
 }
 
 func testContentTypeJSON(t *testing.T, recorder *httptest.ResponseRecorder) {
