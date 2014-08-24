@@ -3,13 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-
-	"github.com/ant0ine/go-json-rest/rest"
 )
-
-func CheckoutHandler(w rest.ResponseWriter, r *rest.Request) {
-	w.WriteHeader(http.StatusAccepted)
-}
 
 type Checkin struct {
 	ID string `json:"id"`
